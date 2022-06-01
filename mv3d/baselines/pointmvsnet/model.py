@@ -324,9 +324,9 @@ class PointMVSNetLoss(nn.Module):
         self.maeloss = MAELoss()
         self.valid_maeloss = Valid_MAELoss(valid_threshold)
 
-    def forward(self, preds, gt_depth_img, depth_intervals, isFlow):
-        # gt_depth_img = labels["gt_depth_img"]
-        # depth_interval = labels["cam_params_list"][:, 0, 1, 3, 1]
+    def forward(self, preds, labels, isFlow):
+        gt_depth_img = labels["gt_depth_img"]
+        depth_intervals = labels["cam_params_list"][:, 0, 1, 3, 1]
 
         coarse_depth_map = preds["coarse_depth_map"]
         resize_gt_depth = F.interpolate(gt_depth_img, (coarse_depth_map.shape[2], coarse_depth_map.shape[3]))

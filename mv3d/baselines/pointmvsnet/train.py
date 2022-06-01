@@ -27,7 +27,7 @@ def parse_args():
     parser.add_argument(
         "--cfg",
         dest="config_file",
-        default="",
+        default="./configs/dtu_wde3.yaml",
         metavar="FILE",
         help="path to config file",
         type=str,
@@ -210,6 +210,7 @@ def train(cfg, output_dir=""):
         cur_epoch = epoch + 1
         scheduler.step()
         start_time = time.time()
+        # print((cur_epoch > cfg.SCHEDULER.INIT_EPOCH))
         train_meters = train_model(model,
                                    loss_fn,
                                    metric_fn,
@@ -273,6 +274,12 @@ def main():
     cfg.freeze()
 
     output_dir = cfg.OUTPUT_DIR
+    # if output_dir:
+    #     print(output_dir)
+
+
+    # return
+
     if output_dir:
         config_path = osp.splitext(args.config_file)[0]
         config_path = config_path.replace("configs", "outputs")

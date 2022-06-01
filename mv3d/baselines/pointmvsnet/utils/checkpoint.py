@@ -1,5 +1,5 @@
 # Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
-from mv3d.baselines.pointmvsnet.utils import logging
+from mv3d.baselines.pointmvsnet.utils.logger import logging
 import os
 
 import torch

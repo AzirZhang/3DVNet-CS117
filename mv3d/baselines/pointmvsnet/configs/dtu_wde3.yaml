@@ -1,10 +1,10 @@
 DATA:
   TRAIN:
-    ROOT_DIR: "data/dtu"
+    ROOT_DIR: "/media/chen_zhang/Windows/Users/azirq/Desktop/mvs_training/dtu"
   VAL:
-    ROOT_DIR: "data/dtu"
+    ROOT_DIR: "/media/chen_zhang/Windows/Users/azirq/Desktop/mvs_training/dtu"
   TEST:
-    ROOT_DIR: "data/dtu"
+    ROOT_DIR: "/media/chen_zhang/Windows/Users/azirq/Desktop/mvs_training/dtu"
     NUM_VIEW: 5
     IMG_HEIGHT: 960
     IMG_WIDTH: 1280
@@ -25,7 +25,7 @@ SOLVER:
   WEIGHT_DECAY: 0.001
   TYPE: 'RMSprop'
 TRAIN:
-  BATCH_SIZE: 4
+  BATCH_SIZE: 1
   CHECKPOINT_PERIOD: 4
   LOG_PERIOD: 50
 TEST:
