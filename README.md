@@ -7,17 +7,16 @@ The following will install all dependencies for 3DVNet training and evaluation. 
 conda create -n 3dvnet python=3.8 -y
 conda activate 3dvnet
 pip install torch==1.7.1+cu110 torchvision==0.8.2+cu110 torchaudio==0.7.2 -f https://download.pytorch.org/whl/torch_stable.html
-pip install \
-  pytorch-lightning==1.1.2 \
-  wandb \
-  tqdm \
-  opencv-python \
-  open3d==0.11.2 \
-  scikit-image==0.17.2 \
-  pyrender \
-  trimesh \
-  kornia==0.4.1 \
-  path
+pip install pytorch-lightning==1.1.2
+pip install wandb
+pip install tqdm
+pip install opencv-python
+pip install open3d==0.11.2
+pip install scikit-image==0.17.2
+pip install pyrender
+pip install trimesh
+pip install kornia==0.4.1
+pip install path
 
 # PyTorch Geometric installation
 pip install torch-scatter==2.0.5 -f https://data.pyg.org/whl/torch-1.7.1+cu110.html
