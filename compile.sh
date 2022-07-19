@@ -1,5 +1,5 @@
 ROOT_DIR=$(pwd)
-declare -a DIRS=( "pointmvsnet/functions" )
+declare -a DIRS=( "mv3d/baselines/pointmvsnet/functions" )
 echo "ROOT_DIR=${ROOT_DIR}"
 
 for BUILD_DIR in "${DIRS[@]}"
