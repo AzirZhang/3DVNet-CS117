@@ -4,11 +4,12 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from pointmvsnet.functions.functions import get_pixel_grids, get_propability_map
-from pointmvsnet.utils.feature_fetcher import FeatureFetcher
-from pointmvsnet.utils.torch_utils import get_knn_3d
-from pointmvsnet.nn.mlp import SharedMLP
-from mv3d.utils import freeze_batchnorm
+from networks import *
+from functions.functions import get_pixel_grids, get_propability_map
+from utils.feature_fetcher import FeatureFetcher
+from utils.torch_utils import get_knn_3d
+from nn.mlp import SharedMLP
+from utils.utils import freeze_batchnorm
 
 
 class PointMVSNet(nn.Module):
@@ -106,8 +107,11 @@ class PointMVSNet(nn.Module):
         point_features[:, 0, :, :] = ref_feature
 
         avg_point_features = torch.mean(point_features, dim=1)
+
+        # print(point_features)
         avg_point_features_2 = torch.mean(point_features ** 2, dim=1)
 
+        # print(1)
         point_features = avg_point_features_2 - (avg_point_features ** 2)
 
         cost_volume = point_features.view(batch_size, feature_channels, num_depth, feature_height, feature_width)
@@ -302,9 +306,11 @@ class PointMVSNet(nn.Module):
                 if isTest:
                     pred_depth_img = torch.detach(pred_depth_img)
                     # print("flow: {}".format(i))
-                flow = point_flow(pred_depth_img, inter_scale* depth_interval, img_scale, i)
+                flow = point_flow(pred_depth_img, inter_scale * depth_interval, img_scale, i)
                 preds["flow{}".format(i+1)] = flow
                 pred_depth_img = flow
+
+            # preds["depth_map"] = pred_depth_img
 
         return preds
 

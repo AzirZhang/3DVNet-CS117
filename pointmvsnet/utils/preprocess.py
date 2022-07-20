@@ -21,8 +21,8 @@ def norm_image_tensor(img):
 
 
 def mask_depth_image(depth_image, min_depth, max_depth):
-    """ mask out-of-range pixel to zero """
-    # print ('mask min max', min_depth, max_depth)
+    """ mask_chessboard out-of-range pixel to zero """
+    # print ('mask_chessboard min max', min_depth, max_depth)
     ret, depth_image = cv2.threshold(depth_image, min_depth, 100000, cv2.THRESH_TOZERO)
     ret, depth_image = cv2.threshold(depth_image, max_depth, 100000, cv2.THRESH_TOZERO_INV)
     depth_image = np.expand_dims(depth_image, 2)

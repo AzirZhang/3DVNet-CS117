@@ -1,5 +1,5 @@
 # Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
-from pointmvsnet.utils.logger import logging
+from utils.logger import logging
 import os
 
 import torch

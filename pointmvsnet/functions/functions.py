@@ -2,8 +2,8 @@
 
 import torch
 
-from pointmvsnet.nn.functional import pdist
-from pointmvsnet.functions.gather_knn import gather_knn
+from nn.functional import pdist
+from functions.gather_knn import gather_knn
 
 
 def get_knn_inds(pdist, k=20, remove=False):

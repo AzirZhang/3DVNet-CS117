@@ -5,8 +5,8 @@ import numpy as np
 import torch
 from torch.utils.data import Dataset, DataLoader
 
-from pointmvsnet.utils.preprocess import mask_depth_image, norm_image, scale_dtu_input, crop_dtu_input
-import pointmvsnet.utils.io as io
+from utils.preprocess import mask_depth_image, norm_image, scale_dtu_input, crop_dtu_input
+from utils import io
 
 
 class DTU_Train_Val_Set(Dataset):
@@ -119,7 +119,7 @@ class DTU_Train_Val_Set(Dataset):
             depth_image = io.load_pfm(depth_path)[0]
             depth_images.append(depth_image)
 
-        # mask out-of-range depth pixels (in a relaxed range)
+        # mask_chessboard out-of-range depth pixels (in a relaxed range)
         ref_depth = depth_images[0]
         depth_start = cams[0][1, 3, 0] + cams[0][1, 3, 1]
         depth_end = cams[0][1, 3, 0] + (self.num_virtual_plane - 2) * cams[0][1, 3, 1]
@@ -150,15 +150,15 @@ class DTU_Train_Val_Set(Dataset):
 
 
 class DTU_Test_Set(Dataset):
-    test_set = [1, 4, 9, 10, 11, 12, 13, 15, 23, 24, 29, 32, 33, 34, 48, 49, 62, 75, 77,
-                110, 114, 118]
+    test_set = [2]#, 3, 4, 9, 10, 11, 12, 13, 15]  # , 23, 24, 29, 32, 33, 34, 48, 49, 62, 75, 77,
+                # 110, 114, 118]
     # test_set = [1]
     test_lighting_set = [3]
 
     mean = torch.tensor([1.97145182, -1.52387525, 651.07223895])
     std = torch.tensor([84.45612252, 93.22252387, 80.08551226])
 
-    cluster_file_path = "Cameras/pair.txt"
+    cluster_file_path = "cam/pair.txt"
 
     def __init__(self, root_dir, dataset_name,
                  num_view=3,
@@ -179,6 +179,7 @@ class DTU_Test_Set(Dataset):
 
         self.cluster_file_path = osp.join(root_dir, self.cluster_file_path)
         self.cluster_list = open(self.cluster_file_path).read().split()
+        # print(self.cluster_list)
         # self.cluster_list =
         assert (dataset_name in ["test"]), "Unknown dataset_name: {}".format(dataset_name)
 
@@ -190,9 +191,9 @@ class DTU_Test_Set(Dataset):
     def _load_dataset(self, dataset, lighting_set):
         path_list = []
         for ind in dataset:
-            image_folder = osp.join(self.root_dir, "Eval/Rectified/scan{}".format(ind))
-            cam_folder = osp.join(self.root_dir, "Cameras")
-            depth_folder = osp.join(self.depth_folder, "scan{}".format(ind))
+            image_folder = osp.join(self.root_dir, "object/")
+            cam_folder = osp.join(self.root_dir, "cam/")
+            depth_folder = osp.join(self.depth_folder, "depth/")
 
             for lighting_ind in lighting_set:
                 # for each reference image
@@ -206,9 +207,9 @@ class DTU_Test_Set(Dataset):
                     # ref image
                     ref_index = int(self.cluster_list[22 * p + 1])
                     ref_image_path = osp.join(
-                        image_folder, "rect_{:03d}_{}_r5000.png".format(ref_index + 1, lighting_ind))
-                    ref_cam_path = osp.join(cam_folder, "{:08d}_cam.txt".format(ref_index))
-                    ref_depth_path = osp.join(depth_folder, "depth_map_{:04d}.pfm".format(ref_index))
+                        image_folder, f"scan{ind}/{ref_index}.png")
+                    ref_cam_path = osp.join(cam_folder, f"{ref_index}_cam.txt")
+                    ref_depth_path = osp.join(depth_folder, f"/{ref_index}.pfm")
 
                     view_image_paths.append(ref_image_path)
                     view_cam_paths.append(ref_cam_path)
@@ -217,16 +218,16 @@ class DTU_Test_Set(Dataset):
                     # view images
                     for view in range(self.num_view - 1):
                         view_index = int(self.cluster_list[22 * p + 2 * view + 3])
-                        view_image_path = osp.join(
-                            image_folder, "rect_{:03d}_{}_r5000.png".format(view_index + 1, lighting_ind))
-                        view_cam_path = osp.join(cam_folder, "{:08d}_cam.txt".format(view_index))
-                        view_depth_path = osp.join(depth_folder, "depth_map_{:04d}.pfm".format(view_index))
+                        view_image_path = osp.join(image_folder, f"scan{ind}/{view_index}.png")
+                        view_cam_path = osp.join(cam_folder, f"{view_index}_cam.txt")
+                        view_depth_path = osp.join(depth_folder, f"/{view_index}.pfm")
                         view_image_paths.append(view_image_path)
                         view_cam_paths.append(view_cam_path)
                         view_depth_paths.append(view_depth_path)
                     paths["view_image_paths"] = view_image_paths
                     paths["view_cam_paths"] = view_cam_paths
                     paths["view_depth_paths"] = view_depth_paths
+                    # paths["ind"] = ind
 
                     path_list.append(paths)
 
@@ -299,6 +300,7 @@ class DTU_Test_Set(Dataset):
             "depth_list": depth_list,
             "ref_img_path": paths["view_image_paths"][0],
             "ref_img": ref_image,
+            # "ind": torch.tensor(paths["ind"]).float(),
             "mean": self.mean,
             "std": self.std,
         }

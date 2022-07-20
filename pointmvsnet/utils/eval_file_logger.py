@@ -25,9 +25,11 @@ def eval_file_logger(data_batch, preds, scene_folder, out_index):
 
     ref_cam_paras = cam_params_list[0, 0, :, :, :]
 
-    init_depth_map_path = scene_folder + ('/%08d_init.pfm' % out_index)
-    init_prob_map_path = scene_folder + ('/%08d_init_prob.pfm' % out_index)
-    out_ref_image_path = scene_folder + ('/%08d.jpg' % out_index)
+    # print(scene_folder, out_index)
+    scene_folder = "/media/chen_zhang/AzirZhang/data/dtu/Eval/Rectified/scan1/scene_folder"
+    init_depth_map_path = scene_folder + ('/%08s_init.pfm' % out_index)
+    init_prob_map_path = scene_folder + ('/%08s_init_prob.pfm' % out_index)
+    out_ref_image_path = scene_folder + ('/%08s.jpg' % out_index)
 
     init_depth_map = preds["coarse_depth_map"].cpu().numpy()[0, 0]
     init_prob_map = preds["coarse_prob_map"].cpu().numpy()[0, 0]

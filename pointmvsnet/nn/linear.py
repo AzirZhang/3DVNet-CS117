@@ -1,7 +1,7 @@
 from torch import nn
 import torch.nn.functional as F
 
-from pointmvsnet.nn.init import init_uniform, init_bn
+from nn.init import init_uniform, init_bn
 
 
 class FC(nn.Module):

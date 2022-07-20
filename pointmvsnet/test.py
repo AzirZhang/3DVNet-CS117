@@ -9,14 +9,13 @@ sys.path.insert(0, osp.dirname(__file__) + '/..')
 import torch
 import torch.nn as nn
 
-from pointmvsnet.config import load_cfg_from_file
-from pointmvsnet.utils.io import mkdir
-from pointmvsnet.utils.logger import setup_logger
+from config import load_cfg_from_file
+from utils.io import mkdir
+from utils.logger import setup_logger
 from pointmvsnet.model import build_pointmvsnet as build_model
-from pointmvsnet.utils.checkpoint import Checkpointer
-from pointmvsnet.dataset import build_data_loader
-from pointmvsnet.utils.metric_logger import MetricLogger
-from pointmvsnet.utils.eval_file_logger import eval_file_logger
+from utils.checkpoint import Checkpointer
+from dataset import build_data_loader
+from utils.metric_logger import MetricLogger
 
 
 def parse_args():
@@ -32,7 +31,7 @@ def parse_args():
     parser.add_argument(
         "--cpu",
         action='store_true',
-        default=False,
+        default=True,
         help="whether to only use cpu for test",
     )
     parser.add_argument(
@@ -63,17 +62,24 @@ def test_model(model,
         for iteration, data_batch in enumerate(data_loader):
             data_time = time.time() - end
             curr_ref_img_path = data_batch["ref_img_path"][0]
+            # print(data_batch["depth_list"])
             path_list.extend(curr_ref_img_path)
             if not isCPU:
                 data_batch = {k: v.cuda(non_blocking=True) for k, v in data_batch.items() if isinstance(v, torch.Tensor)}
+
             preds = model(data_batch, image_scales, inter_scales, isFlow=True, isTest=True)
+            # print("Start saving")
+            # torch.save(preds["world_points"], f"./model/dtu_data/depth/{iteration}.txt")
+            # print(preds.keys())
+            # torch.save(preds["coarse_depth_map"], f"./model/dtu_data/depth/{iteration}.txt")
+            torch.save(preds["flow3"], f"./model/dtu_data/depth/{iteration}.txt")
 
             batch_time = time.time() - end
             end = time.time()
             meters.update(time=batch_time, data=data_time)
             logger.info(
                 "{} finished.".format(curr_ref_img_path) + str(meters))
-            eval_file_logger(data_batch, preds, curr_ref_img_path, folder)
+            # eval_file_logger(data_batch, preds, curr_ref_img_path, folder)
 
 
 def test(cfg, output_dir, isCPU=False):
@@ -111,7 +117,8 @@ def main():
     num_gpus = torch.cuda.device_count()
 
     cfg = load_cfg_from_file(args.config_file)
-    cfg.merge_from_list(args.opts)
+    # cfg.merge_from_list(args.opts)
+    # print(cfg.TEST_FOLDER)
     cfg.freeze()
     assert cfg.TEST.BATCH_SIZE == 1
 

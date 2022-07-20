@@ -2,7 +2,8 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from pointmvsnet.functions.gather_knn import gather_knn
+from nn.conv import *
+from functions.gather_knn import gather_knn
 
 
 class EdgeConv(nn.Module):

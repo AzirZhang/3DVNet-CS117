@@ -1,8 +1,8 @@
 from torch import nn
 import torch.nn.functional as F
 
-from pointmvsnet.nn.conv import Conv1d, Conv2d
-from pointmvsnet.nn.linear import FC
+from nn.conv import Conv1d, Conv2d
+from nn.linear import FC
 
 
 class MLP(nn.ModuleList):

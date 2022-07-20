@@ -149,6 +149,8 @@ _C.TEST.AUGMENTATION = ()
 
 _C.TEST.LOG_PERIOD = 10
 
+_C.TEST_FOLDER = 1
+
 
 def load_cfg_from_file(cfg_filename):
     """Load config from a file
